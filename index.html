@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Office Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+.dashboard {
+  max-width: 900px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+.value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+.label {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #777;
+}
+</style>
+</head>
+
+<body>
+
+<h2 style="text-align:center">📊 Office Business Dashboard</h2>
+
+<div class="dashboard">
+  <div class="card">
+    <div class="value" id="target">--</div>
+    <div class="label">Chitty Target</div>
+  </div>
+
+  <div class="card">
+    <div class="value" id="done">--</div>
+    <div class="label">Business Done</div>
+  </div>
+
+  <div class="card">
+    <div class="value" id="percent">--%</div>
+    <div class="label">% Achieved</div>
+  </div>
+
+  <div class="card">
+    <div class="value" id="aqi">--</div>
+    <div class="label">Asset Quality Index</div>
+  </div>
+</div>
+
+<script>
+const csvUrl = "PASTE_YOUR_CSV_LINK_HERE";
+
+fetch(csvUrl)
+  .then(res => res.text())
+  .then(text => {
+    const rows = text.trim().split("\n").slice(1);
+    const data = {};
+
+    rows.forEach(row => {
+      const [key, value] = row.split(",");
+      data[key.trim()] = Number(value);
+    });
+
+    document.getElementById("target").textContent = data["Chitty Target"];
+    document.getElementById("done").textContent = data["Business Done"];
+    document.getElementById("aqi").textContent = data["Asset Quality Index"];
+
+    const percent = ((data["Business Done"] / data["Chitty Target"]) * 100).toFixed(1);
+    document.getElementById("percent").textContent = percent + "%";
+  });
+</script>
+
+</body>
+</html>
